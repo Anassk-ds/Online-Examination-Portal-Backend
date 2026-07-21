@@ -26,7 +26,7 @@ export const checkAttempted = async (req, res) => {
 
 export const submitResult = async (req, res) => {
   try {
-    const { studentEmail, examId, examTitle, score, totalQuestions, studentAnswers } = req.body;
+    const { studentEmail, examId, examTitle, score, totalQuestions, totalMarks, studentAnswers } = req.body;
     if (!studentEmail || !examId || score === undefined || totalQuestions === undefined) {
       return res.status(400).json({ message: 'Missing required result fields.' });
     }
@@ -37,6 +37,7 @@ export const submitResult = async (req, res) => {
       examTitle,
       score,
       totalQuestions,
+      totalMarks,
       studentAnswers
     });
     return res.status(201).json(toClientResult(result));
