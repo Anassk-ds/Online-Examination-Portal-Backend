@@ -7,6 +7,7 @@ const resultSchema = new mongoose.Schema(
     examTitle: { type: String, default: 'Exam Session' },
     score: { type: Number, required: true },
     totalQuestions: { type: Number, required: true },
+    totalMarks: { type: Number }, // sum of per-question weights; falls back to totalQuestions on the frontend if absent (older results)
     // Keyed by question index; each value is either a plain MCQ answer string
     // or a coding-answer object ({ code, lang, testCaseResults, ... }).
     studentAnswers: { type: mongoose.Schema.Types.Mixed, default: {} }
