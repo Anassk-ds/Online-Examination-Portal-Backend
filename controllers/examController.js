@@ -77,6 +77,9 @@ function validateExamPayload({ title, startDate, endDate, questions }) {
     return 'End date must be after the start date.';
   }
   for (const q of questions || []) {
+    if (!q.marks || Number(q.marks) <= 0) {
+      return `"${q.text || 'A question'}" needs a marks value greater than 0.`;
+    }
     if (q.type === 'coding') {
       const cases = q.testCases || [];
       if (cases.length === 0 || cases.every((tc) => !tc.input && !tc.output)) {
