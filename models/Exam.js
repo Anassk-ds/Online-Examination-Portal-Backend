@@ -12,6 +12,7 @@ const questionSchema = new mongoose.Schema(
   {
     type: { type: String, enum: ['mcq', 'coding'], default: 'mcq' },
     text: { type: String, default: '' },
+    marks: { type: Number, default: 1, min: 0 },
     // MCQ fields
     optionA: { type: String, default: '' },
     optionB: { type: String, default: '' },
