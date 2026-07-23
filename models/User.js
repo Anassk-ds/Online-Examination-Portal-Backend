@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
@@ -6,7 +7,9 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true }, // stored hashed, never plaintext
     role: { type: String, enum: ['student', 'admin'], required: true },
-    isApproved: { type: Boolean, default: false }
+    isApproved: { type: Boolean, default: false },
+    resetPasswordToken: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false }
   },
   { timestamps: true }
 );
