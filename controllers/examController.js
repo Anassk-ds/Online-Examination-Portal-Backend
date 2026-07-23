@@ -23,11 +23,11 @@ export const getExamById = async (req, res) => {
 
 export const createExam = async (req, res) => {
   try {
-    const { title, startDate, endDate, questions } = req.body;
-    const validation = validateExamPayload({ title, startDate, endDate, questions });
+    const { title, startDate, endDate, durationMinutes, questions } = req.body;
+    const validation = validateExamPayload({ title, startDate, endDate, durationMinutes, questions });
     if (validation) return res.status(400).json({ message: validation });
 
-    const exam = await Exam.create({ title: title.trim(), startDate, endDate, questions });
+    const exam = await Exam.create({ title: title.trim(), startDate, endDate, durationMinutes, questions });
     return res.status(201).json(toClientExam(exam));
   } catch (err) {
     console.error('createExam error:', err);
@@ -37,13 +37,13 @@ export const createExam = async (req, res) => {
 
 export const updateExam = async (req, res) => {
   try {
-    const { title, startDate, endDate, questions } = req.body;
-    const validation = validateExamPayload({ title, startDate, endDate, questions });
+    const { title, startDate, endDate, durationMinutes, questions } = req.body;
+    const validation = validateExamPayload({ title, startDate, endDate, durationMinutes, questions });
     if (validation) return res.status(400).json({ message: validation });
 
     const exam = await Exam.findByIdAndUpdate(
       req.params.id,
-      { title: title.trim(), startDate, endDate, questions },
+      { title: title.trim(), startDate, endDate, durationMinutes, questions },
       { new: true, runValidators: true }
     );
     if (!exam) return res.status(404).json({ message: 'Exam not found.' });
@@ -69,12 +69,15 @@ export const deleteExam = async (req, res) => {
 
 // Same rules as the admin.jsx client-side check, enforced again server-side
 // so a bad request (or a bypassed client) can't save a broken exam.
-function validateExamPayload({ title, startDate, endDate, questions }) {
+function validateExamPayload({ title, startDate, endDate, durationMinutes, questions }) {
   if (!title?.trim() || !startDate || !endDate) {
     return 'Please provide the exam title and both dates.';
   }
   if (new Date(endDate) <= new Date(startDate)) {
     return 'End date must be after the start date.';
+  }
+  if (!durationMinutes || Number(durationMinutes) <= 0) {
+    return 'Please set how many minutes students get once they start the exam.';
   }
   for (const q of questions || []) {
     if (!q.marks || Number(q.marks) <= 0) {
