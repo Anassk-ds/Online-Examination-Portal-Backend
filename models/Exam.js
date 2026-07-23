@@ -34,6 +34,12 @@ const examSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    // How long each student's countdown timer runs once THEY click Start —
+    // independent of startDate/endDate, which only control the window during
+    // which students are allowed to begin the exam at all. A student who
+    // starts at any point inside that window still gets exactly this many
+    // minutes on their own timer.
+    durationMinutes: { type: Number, required: true, default: 60, min: 1 },
     questions: { type: [questionSchema], default: [] }
   },
   { timestamps: true }
