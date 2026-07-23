@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import Exam from '../models/Exam.js';
+import Result from '../models/Result.js';
 
 export const getPendingStudents = async (_req, res) => {
   try {
@@ -24,11 +25,15 @@ export const approveStudent = async (req, res) => {
 
 export const getAdminStats = async (_req, res) => {
   try {
-    const [totalExams, approvedStudents] = await Promise.all([
+    const now = new Date();
+    const [totalExams, approvedStudents, totalStudents, totalResults, upcomingExams] = await Promise.all([
       Exam.countDocuments(),
-      User.countDocuments({ role: 'student', isApproved: true })
+      User.countDocuments({ role: 'student', isApproved: true }),
+      User.countDocuments({ role: 'student' }),
+      Result.countDocuments(),
+      Exam.countDocuments({ startDate: { $gt: now } })
     ]);
-    return res.json({ totalExams, approvedStudents });
+    return res.json({ totalExams, approvedStudents, totalStudents, totalResults, upcomingExams });
   } catch (err) {
     console.error('getAdminStats error:', err);
     return res.status(500).json({ message: 'Server error fetching stats.' });
