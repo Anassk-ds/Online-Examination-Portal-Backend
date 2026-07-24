@@ -23,6 +23,18 @@ export const approveStudent = async (req, res) => {
   }
 };
 
+export const getAllStudents = async (_req, res) => {
+  try {
+    const students = await User.find({ role: 'student' }).select('-password').sort({ name: 1 });
+    return res.json(
+      students.map((u) => ({ id: u._id, name: u.name, email: u.email, isApproved: u.isApproved, createdAt: u.createdAt }))
+    );
+  } catch (err) {
+    console.error('getAllStudents error:', err);
+    return res.status(500).json({ message: 'Server error fetching students.' });
+  }
+};
+
 export const getAdminStats = async (_req, res) => {
   try {
     const now = new Date();
