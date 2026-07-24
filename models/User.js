@@ -8,8 +8,9 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true }, // stored hashed, never plaintext
     role: { type: String, enum: ['student', 'admin'], required: true },
     isApproved: { type: Boolean, default: false },
-    resetPasswordToken: { type: String, select: false },
-    resetPasswordExpires: { type: Date, select: false }
+    resetPasswordCode: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false },
+    resetPasswordAttempts: { type: Number, default: 0, select: false }
   },
   { timestamps: true }
 );
